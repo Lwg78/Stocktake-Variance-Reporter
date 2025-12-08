@@ -45,7 +45,7 @@ Your new Excel file will be organized cleanly:
 
 ---
 
-# 💻 Developer Guide: For AISG & Engineers
+# 💻 Developer Guide: For DATA Engineers
 
 **Context:** This project demonstrates **Domain-Driven Design**. It translates specific Retail Operations logic into a modular, maintainable Python pipeline.
 
