@@ -1,0 +1,18 @@
+# --- IGNORE ALL EXCEL FILES ---
+# This ensures NO real data ever gets uploaded
+*.xls
+*.xlsx
+*.csv
+
+# --- IGNORE OUTPUT REPORTS ---
+output/*
+
+# --- KEEP THESE FOLDERS (But ignore content) ---
+!input/.gitkeep
+!output/.gitkeep
+
+# --- PYTHON JUNK ---
+__pycache__/
+*.pyc
+venv/
+.DS_Store
