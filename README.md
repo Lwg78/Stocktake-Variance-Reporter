@@ -74,6 +74,28 @@ The tool transforms the raw SAP dump into organized tabs. Here is a preview of t
 
 ---
 
+
+## 🌐 Web Interface (Manager Mode)
+
+Prefer a website over a black terminal window? We included a lightweight Web App.
+
+### How to Launch
+1.  **Install Web Dependencies:**
+    ```bash
+    pip install fastapi uvicorn python-multipart
+    ```
+2.  **Start the Server:**
+    ```bash
+    uvicorn api:app --reload
+    ```
+3.  **Open Browser:**
+    Go to `http://127.0.0.1:8000`
+
+You will see a clean, modern interface where you can upload SAP files and download the processed report instantly.
+
+
+---
+
 # 💻 Developer Guide: For AISG & Engineers
 
 ### 🔒 Data Privacy & Mock Data (Security First)
