@@ -93,13 +93,17 @@ docker run -p 8000:8000 stocktake-tool
 ## ⚙️ Installation (Windows Setup for Managers)
 If setting this up on a Store Laptop for the first time:
 
-1.  **Install Python:** Download & Install Python 3.9+ (Check "Add to PATH").
-2.  **Install Libraries:** Double-click `install_deps.bat` (Create a text file with: `pip install -r requirements.txt`).
-3.  **Create the Web Launcher:**
-    * Create a new file named `start_server.bat`.
-    * Paste this inside: `uvicorn api:app --reload`
-    * Save it.
-    * Now you can just double-click this file to launch the website!
+1.  **Install Python:**
+    * Download Python 3.9+ from [python.org](https://www.python.org/downloads/).
+    * **CRITICAL:** Check the box that says **"Add Python to PATH"** during installation.
+
+2.  **Install Libraries (One-Time Setup):**
+    * Double-click the file `install_deps.bat` included in this folder.
+    * Wait for the "Installation Complete" message.
+
+3.  **Launch the App:**
+    * **Option A (Standard):** Double-click `run.bat` to process files instantly.
+    * **Option B (Web Mode):** Double-click `start_server.bat` to open the website interface.
 
 ---
 
