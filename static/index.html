@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stocktake Variance Reporter</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); text-align: center; width: 400px; }
+        h1 { color: #2c3e50; margin-bottom: 0.5rem; }
+        p { color: #7f8c8d; margin-bottom: 2rem; }
+        
+        .upload-box { border: 2px dashed #3498db; border-radius: 8px; padding: 2rem; cursor: pointer; transition: 0.3s; background: #ecf0f1; }
+        .upload-box:hover { background: #e3f2fd; border-color: #2980b9; }
+        .upload-icon { font-size: 3rem; color: #3498db; margin-bottom: 1rem; }
+        
+        button { background-color: #27ae60; color: white; border: none; padding: 12px 24px; font-size: 1rem; border-radius: 6px; cursor: pointer; margin-top: 1.5rem; width: 100%; transition: 0.2s; }
+        button:hover { background-color: #219150; }
+        button:disabled { background-color: #95a5a6; cursor: not-allowed; }
+
+        #status { margin-top: 1rem; font-weight: bold; min-height: 20px; }
+        .error { color: #e74c3c; }
+        .success { color: #27ae60; }
+        
+        /* Spinner */
+        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: none; margin: 0 auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📉 Stocktake Reporter</h1>
+    <p>Upload your SAP Variance Excel file.</p>
+
+    <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+        <div class="upload-icon">📂</div>
+        <span id="fileName">Click to select file</span>
+        <input type="file" id="fileInput" accept=".xls,.xlsx" style="display: none" onchange="updateFileName()">
+    </div>
+
+    <button id="uploadBtn" onclick="uploadFile()">Generate Report</button>
+    
+    <div id="status"></div>
+    <div class="spinner" id="spinner"></div>
+</div>
+
+<script>
+    function updateFileName() {
+        const input = document.getElementById('fileInput');
+        if (input.files.length > 0) {
+            document.getElementById('fileName').textContent = input.files[0].name;
+        }
+    }
+
+    async function uploadFile() {
+        const input = document.getElementById('fileInput');
+        const status = document.getElementById('status');
+        const btn = document.getElementById('uploadBtn');
+        const spinner = document.getElementById('spinner');
+
+        if (input.files.length === 0) {
+            status.textContent = "⚠️ Please select a file first.";
+            status.className = "error";
+            return;
+        }
+
+        // UI Loading State
+        btn.disabled = true;
+        btn.textContent = "Processing...";
+        spinner.style.display = "block";
+        status.textContent = "";
+
+        const formData = new FormData();
+        formData.append("file", input.files[0]);
+
+        try {
+            const response = await fetch('/upload/', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                // Handle Download
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                // Try to get filename from header or default
+                a.download = "Processed_Stocktake_Report.xlsx";
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                
+                status.textContent = "✅ Success! Downloading report...";
+                status.className = "success";
+            } else {
+                const errorData = await response.json();
+                status.textContent = "❌ Error: " + (errorData.error || "Upload failed");
+                status.className = "error";
+            }
+        } catch (error) {
+            status.textContent = "❌ Server Error. Is Python running?";
+            status.className = "error";
+        } finally {
+            btn.disabled = false;
+            btn.textContent = "Generate Report";
+            spinner.style.display = "none";
+        }
+    }
+</script>
+
+</body>
+</html>
