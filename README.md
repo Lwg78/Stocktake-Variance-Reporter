@@ -11,6 +11,46 @@
 **Solution:** This tool automates the entire workflow. It ingests the raw SAP file, cleans the data, sorts it into departmental tabs, and uses a **Rule-Based AI Engine** to flag potential theft, receiving errors, or contra items automatically.
 
 
+--- 
+
+## 📸 Demo Output (Privacy Safe)
+
+### 1. The Terminal Output
+When you run the script, you will see a clean execution log confirming the automatic sorting logic:
+
+```text
+🚀 STARTING STOCKTAKE VARIANCE REPORTER
+=======================================
+📂 Scanning folder: /root/stocktake-variance-reporter/input/
+🔎 Found 1 files to process...
+
+📂 Processing: MOCK_SAP_REPORT.xlsx
+   ✅ Tab Created: 50 - Fresh Pork (Top 10 Gains/Losses)
+   ✅ Tab Created: 81 - HABA Hair Care (Top 10 Gains/Losses)
+   ✅ Tab Created: 43 - Dairy Spread (Top 10 Gains/Losses)
+   
+🤖 Remarks Engine Findings:
+   -> Flagged 2 "Contra" items (Packaging Change)
+   -> Flagged 1 High Value Loss ($600+)
+   
+🎉 Report Generated: /root/stocktake-variance-reporter/output/Report_MOCK_SAP_REPORT.xlsx
+```
+
+### 2. The Clean Report Structure
+The tool transforms the raw SAP dump into organized tabs. Here is a preview of the generated data structure:
+
+**Tab: 50 - Fresh Pork**
+
+| SKU | Description | Qty Variance | Val Variance | Remarks (Auto-Generated) |
+| :--- | :--- | :--- | :--- | :--- |
+| **Gains** | | | | |
+| 10293 | SADIA WINGS NEW | +10 | +$100.00 | |
+| 59201 | PORK RIB PREM | +5 | +$45.00 | |
+| **Losses** | | | | |
+| 10292 | DA - SADIA WINGS | -10 | -$100.00 | **⚠️ Contra/Pkg Change?** |
+| 88210 | EXPENSIVE BRANDY | -1 | -$600.00 | **📉 High Value LOSS ($600) - Investigate Theft** |
+
+
 ---
 
 # 🛍️ User Guide: For Store Managers
