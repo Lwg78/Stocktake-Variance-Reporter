@@ -10,33 +10,11 @@
 
 **Solution:** This tool automates the entire workflow. It ingests the raw SAP file, cleans the data, sorts it into departmental tabs, and uses a **Rule-Based AI Engine** to flag potential theft, receiving errors, or contra items automatically.
 
-
---- 
+---
 
 ## 📸 Demo Output (Privacy Safe)
 
-### 1. The Terminal Output
-When you run the script, you will see a clean execution log confirming the automatic sorting logic:
-
-```text
-🚀 STARTING STOCKTAKE VARIANCE REPORTER
-=======================================
-📂 Scanning folder: /root/stocktake-variance-reporter/input/
-🔎 Found 1 files to process...
-
-📂 Processing: MOCK_SAP_REPORT.xlsx
-   ✅ Tab Created: 50 - Fresh Pork (Top 10 Gains/Losses)
-   ✅ Tab Created: 81 - HABA Hair Care (Top 10 Gains/Losses)
-   ✅ Tab Created: 43 - Dairy Spread (Top 10 Gains/Losses)
-   
-🤖 Remarks Engine Findings:
-   -> Flagged 2 "Contra" items (Packaging Change)
-   -> Flagged 1 High Value Loss ($600+)
-   
-🎉 Report Generated: /root/stocktake-variance-reporter/output/Report_MOCK_SAP_REPORT.xlsx
-```
-
-### 2. The Clean Report Structure
+### 1. The Clean Report Structure
 The tool transforms the raw SAP dump into organized tabs. Here is a preview of the generated data structure:
 
 **Tab: 50 - Fresh Pork**
@@ -50,49 +28,23 @@ The tool transforms the raw SAP dump into organized tabs. Here is a preview of t
 | 10292 | DA - SADIA WINGS | -10 | -$100.00 | **⚠️ Contra/Pkg Change?** |
 | 88210 | EXPENSIVE BRANDY | -1 | -$600.00 | **📉 High Value LOSS ($600) - Investigate Theft** |
 
-
 ---
 
 # 🛍️ User Guide: For Store Managers
 
-**No coding skills required.** If you can use Excel, you can use this tool.
+**No coding skills required.** You have two ways to run this tool.
 
-### 🚀 How to Generate Your Report
+### Option A: The "One-Click" Method (Standard)
 1.  **Download from SAP:** Export your standard Stocktake Variance Report (e.g., `HGPT Mid Year.xlsx`).
 2.  **Drop the File:** Place your Excel file into the `input/` folder.
-3.  **Run the Reporter:** Double-click `run.bat` (Windows) or run the script.
-4.  **Open Results:** Check the `output/` folder for your processed `Report_....xlsx`.
+3.  **Run:** Double-click `run.bat` (Windows).
+4.  **Result:** Check the `output/` folder for your processed `Report_....xlsx`.
 
-### 📊 What You Will See
-* **Summary Tab:** Total $ Variance by Department.
-* **Department Tabs:** (e.g., `50 - Fresh Pork`)
-    * **Top 10 Gains:** Listed at the top.
-    * **Top 10 Losses:** Listed at the bottom.
-* **"Remarks" Column:** Auto-filled suggestions:
-    * *Example:* `⚠️ Contra/Pkg Change?` (For "DA" items)
-    * *Example:* `📉 High Value LOSS ($600)` (For theft investigation)
-
----
-
-
-## 🌐 Web Interface (Manager Mode)
-
-Prefer a website over a black terminal window? We included a lightweight Web App.
-
-### How to Launch
-1.  **Install Web Dependencies:**
-    ```bash
-    pip install fastapi uvicorn python-multipart
-    ```
-2.  **Start the Server:**
-    ```bash
-    uvicorn api:app --reload
-    ```
-3.  **Open Browser:**
-    Go to `http://127.0.0.1:8000`
-
-You will see a clean, modern interface where you can upload SAP files and download the processed report instantly.
-
+### Option B: The Web Interface (Modern)
+Prefer a drag-and-drop website?
+1.  **Start the App:** Double-click `start_server.bat` (See "Installation" below to create this).
+2.  **Open Browser:** Go to `http://127.0.0.1:8000`
+3.  **Upload & Download:** Drag your file onto the page and get the report instantly.
 
 ---
 
@@ -101,7 +53,7 @@ You will see a clean, modern interface where you can upload SAP files and downlo
 ### 🔒 Data Privacy & Mock Data (Security First)
 **NOTE:** To comply with data privacy policies, **NO REAL INTERNAL DATA** is hosted in this repository.
 * **`.gitignore` Policy:** All `.xls/.xlsx` files are strictly ignored.
-* **Mock Data Generator:** I have included `src/mock_data_gen.py` which generates a realistic "Fake SAP Report" so you can test the pipeline's logic without accessing sensitive corporate data.
+* **Mock Data Generator:** Use `src/mock_data_gen.py` to generate realistic "Fake SAP Data" for testing.
 
 ### 🛠 Architecture
 ```text
@@ -109,31 +61,47 @@ stocktake-variance-reporter/
 ├── input/                  # 📂 Input Zone (Git-ignored)
 ├── output/                 # 📂 Output Zone (Git-ignored)
 ├── src/
-│   ├── config.py           # 🧠 Domain Knowledge (Class Codes: 50=Pork, 81=HABA)
 │   ├── processor.py        # ⚙️ ETL Logic (Cleaning, Tab Separation)
 │   ├── remarks_engine.py   # 🤖 Logic Unit (The "AI" findings generator)
+│   ├── config.py           # 🧠 Domain Knowledge (Class Codes)
 │   └── mock_data_gen.py    # 🧪 Test Data Generator
 ├── tests/
 │   └── test_remarks.py     # ✅ Unit Tests for Business Logic
+├── static/
+│   └── index.html          # 🌐 Frontend (Simple HTML/JS Dashboard)
 ├── .github/workflows/      # 🤖 CI/CD Pipeline (Runs tests & demo)
-├── main.py                 # 🚀 Entry Point
+├── api.py                  # 🔌 Backend API (FastAPI)
+├── Dockerfile              # 🐳 Container Configuration
+├── main.py                 # 🚀 CLI Entry Point
 └── requirements.txt        # Dependencies
 ```
+
 ### ✅ Quality Assurance (CI/CD)
-This repository uses GitHub Actions to automatically test the business logic on every commit.
-
+This repository uses **GitHub Actions** to automatically test the business logic on every commit.
 * **Test Suite:** `tests/test_remarks.py`
-
 * **Coverage:** Verifies that the AI Engine correctly flags Contra Items (`DA - Item`), High Value Theft (`>$500`), and UOM Errors.
 
-### ☁️ Live Cloud Demo
-You don't need to clone the code to see it work.
+### 🐳 Deployment (Docker)
+To run this in a containerized environment (ensuring it runs on any OS):
+```bash
+docker build -t stocktake-tool .
+docker run -p 8000:8000 stocktake-tool
+```
 
-* Go to the **Actions** tab.
+---
 
-* Click **Run Stocktake Demo**.
+## ⚙️ Installation (Windows Setup for Managers)
+If setting this up on a Store Laptop for the first time:
 
-* Scroll down to **Artifacts** to download the Excel report generated by this code in the cloud.
+1.  **Install Python:** Download & Install Python 3.9+ (Check "Add to PATH").
+2.  **Install Libraries:** Double-click `install_deps.bat` (Create a text file with: `pip install -r requirements.txt`).
+3.  **Create the Web Launcher:**
+    * Create a new file named `start_server.bat`.
+    * Paste this inside: `uvicorn api:app --reload`
+    * Save it.
+    * Now you can just double-click this file to launch the website!
+
+---
 
 ## 📜 Disclaimer
-This is a personal project developed by Lim Wen Gio based on operational experience in the FMCG sector. It is not an official software product of NTUC FairPrice Co-operative Ltd.
+This is a personal project developed by Lim Wen Gio based on operational experience in the FMCG sector. It is **not** an official software product of NTUC FairPrice Co-operative Ltd.
