@@ -48,7 +48,7 @@ Prefer a drag-and-drop website?
 
 ---
 
-# 💻 Developer Guide: For AISG & Engineers
+# 💻 Developer Guide: For AI & Data Engineers
 
 ### 🔒 Data Privacy & Mock Data (Security First)
 **NOTE:** To comply with data privacy policies, **NO REAL INTERNAL DATA** is hosted in this repository.
